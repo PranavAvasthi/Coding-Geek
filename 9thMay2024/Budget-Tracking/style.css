@@ -1,0 +1,227 @@
+@import url('https://fonts.googleapis.com/css2?family=Anonymous+Pro:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Anonymous+Pro:ital,wght@0,400;0,700;1,400;1,700&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    display: flex;
+    flex-direction: column;
+    background-image: url('assets/bg.webp');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: 0px;
+}
+
+header h1 {
+    font-size: 20px;
+    margin-top: 20px;
+    text-align: center;
+    font-family: "Anonymous Pro";
+    font-weight: 400;
+    font-style: normal;
+}
+
+header p {
+    font-size: 45px;
+    margin-top: 15px;
+    text-align: center;
+    font-family: "Anonymous Pro";
+    font-weight: 900;
+    font-style: normal;
+}
+
+.budget {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 15px;
+}
+
+.budget-income {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    background-color: #5d945c;
+    width: 30%;
+    height: 8vh;
+    font-family: "Roboto Mono";
+    font-weight: 300;
+    font-style: normal;
+}
+
+.budget-expenses {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    background-color: #d2373f;
+    width: 30%;
+    height: 8vh;
+    font-family: "Roboto Mono";
+    font-weight: 300;
+    font-style: normal;
+}
+
+.income-title, .expenses-title {
+    font-size: 16px;
+    padding-left: 30px;
+    color: white;
+}
+
+#income-value, #expenses-value {
+    font-size: 16px;
+    margin-top: 0px;
+    padding-right: 20px;
+    color: white;
+    font-family: "Roboto Mono";
+    font-weight: 300;
+    font-style: normal;
+}
+
+.add {
+    background-color: #efefee;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 7vh;
+}
+
+#add-type {
+    padding: 10px 0px;
+    width: 3%;
+    border: 1px solid #5d945c;
+    font-size: 1.1rem;
+    border-radius: 50%;
+    margin-right: 10px;
+    background-color: #efefee;
+}
+
+#add-type, input:focus {
+    outline: none;
+}
+
+#add-description {
+    padding: 14px;
+    width: 25%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-right: 10px;
+    border: none;
+}
+
+#add-amount {
+    padding: 14px;
+    width: 7%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-right: 10px;
+    border: none;
+}
+
+#add-btn{
+    padding: 9px 11px;
+    border: 1px solid #5d945c;
+    border-radius: 50%;
+    color: #5d945c;
+}
+
+.fa-check {
+    font-size: 1rem;
+}
+
+#error-msg { 
+    margin-top: 10px;
+    font-size: 20px; 
+    height: 30px;
+    text-align: center;
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-evenly;
+}
+
+.close-btn {
+    color: red;
+}
+
+.statements {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    padding: 0% 0%;
+    gap: 2%;
+}
+
+.income-head{
+    font-size: 0.7rem;
+    color: #5d945c;
+    margin-bottom: 20px;
+}
+
+.expenses-head{
+    font-size: 0.7rem;
+    color: #d2373f;
+    margin-bottom: 20px;
+}
+
+.statements-details {
+    display: flex;
+    justify-content: space-between;
+}
+
+#income-details {
+    display: flex;
+    flex-direction: column;
+    margin: 5px;
+}
+
+.transaction-1 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #efefee;
+    height: 7vh;
+    width: 30vw;
+    margin-left: 140px;
+}
+
+.transaction-1 p:first-child{
+    padding-left: 20px;
+}
+
+.transaction-1 p {
+    padding-right: 20px;
+}
+
+.transaction-1:nth-child(even) {
+    background-color: white;
+    box-shadow: 0 0.2px 0 0 grey;
+}
+
+.transaction-2 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #efefee;
+    height: 7vh;
+    margin-right: 140px;
+    width: 30vw;
+}
+
+.transaction-2 p:first-child{
+    padding-left: 20px;
+}
+
+.transaction-2 p {
+    padding-right: 20px;
+}
+
+.transaction-2:nth-child(even) {
+    background-color: white;
+    box-shadow: 0 0.2px 0 0 grey;
+}
