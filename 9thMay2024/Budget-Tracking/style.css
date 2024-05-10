@@ -52,6 +52,9 @@ header p {
     font-family: "Roboto Mono";
     font-weight: 300;
     font-style: normal;
+    position: relative;
+    overflow: hidden; 
+    transition: right 0.3s;
 }
 
 .budget-expenses {
@@ -65,6 +68,9 @@ header p {
     font-family: "Roboto Mono";
     font-weight: 300;
     font-style: normal;
+    position: relative;
+    overflow: hidden; 
+    transition: right 0.3s;
 }
 
 .income-title, .expenses-title {
@@ -81,6 +87,58 @@ header p {
     font-family: "Roboto Mono";
     font-weight: 300;
     font-style: normal;
+    display: flex;
+    flex-direction: row;
+}
+
+.income-percentage {
+    font-size: 16px;
+    margin-top: 0px;
+    padding-right: 20px;
+    font-family: "Roboto Mono";
+    font-weight: 300;
+    font-style: normal;
+    position: absolute;
+    right: -120%;
+    transition: right 0.3s;
+}
+
+.budget-income:hover #income-value{
+    padding-right: 120px;
+}
+
+.budget-income:hover .income-percentage{
+    right: 0;
+    padding-right: 20px;
+    background-color: #ccc;
+    margin-right: 20px;
+    color: black;
+    padding: 2px 4px;
+}
+
+.expenses-percentage {
+    font-size: 16px;
+    margin-top: 0px;
+    padding-right: 20px;
+    font-family: "Roboto Mono";
+    font-weight: 300;
+    font-style: normal;
+    position: absolute;
+    right: -120%;
+    transition: right 0.3s;
+}
+
+.budget-expenses:hover #expenses-value{
+    padding-right: 120px;
+}
+
+.budget-expenses:hover .expenses-percentage{
+    right: 0;
+    padding-right: 20px;
+    background-color: #ccc;
+    margin-right: 20px;
+    color: black;
+    padding: 2px 4px;
 }
 
 .add {
@@ -141,11 +199,15 @@ header p {
     text-align: center;
     display: flex;
     flex-direction: row-reverse;
-    justify-content: space-evenly;
+    justify-content: center;
+    visibility: hidden;
 }
 
 .close-btn {
     color: red;
+    position: absolute;
+    top: 43%;
+    left: 82%;
 }
 
 .statements {
@@ -174,11 +236,10 @@ header p {
     justify-content: space-between;
 }
 
-#income-details {
+/* #income-details {
     display: flex;
     flex-direction: column;
-    margin: 5px;
-}
+} */
 
 .transaction-1 {
     display: flex;
@@ -186,7 +247,7 @@ header p {
     align-items: center;
     background-color: #efefee;
     height: 7vh;
-    width: 30vw;
+    width: 39vw;
     margin-left: 140px;
 }
 
@@ -210,7 +271,7 @@ header p {
     background-color: #efefee;
     height: 7vh;
     margin-right: 140px;
-    width: 30vw;
+    width: 39vw;
 }
 
 .transaction-2 p:first-child{
@@ -224,4 +285,92 @@ header p {
 .transaction-2:nth-child(even) {
     background-color: white;
     box-shadow: 0 0.2px 0 0 grey;
+}
+
+.transaction-1 {
+    position: relative;
+    overflow: hidden; 
+    transition: right 0.3s; 
+    transition: padding 0.3s;
+}
+
+.delete-btn-1,
+.percentage-display-1 {
+    position: absolute;
+    top: 33%;
+    right: -100%;
+    transition: right 0.3s;
+}
+
+.transaction-1:hover p:first-child {
+    padding-left: 20px;
+}
+
+.transaction-1:hover p {
+    padding-right: 106px;
+}
+
+.transaction-1:hover .delete-btn-1 {
+    right: 0;
+    padding-right: 10px;
+    border: 1px solid #5d945c;
+    color: #5d945c;
+    padding: 2px 5px;
+    margin-right: 10px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.transaction-1:hover .percentage-display-1 {
+    right: 0;
+    padding-right: 40px;
+    background-color: #5d945c;
+    color: white;
+    padding: 3px 5px;
+    margin-right: 35px;
+    font-size: 14px;
+}
+
+.transaction-2 {
+    position: relative;
+    overflow: hidden; 
+    transition: right 0.3s; 
+    transition: padding 0.3s;
+}
+
+.delete-btn-2,
+.percentage-display-2 {
+    position: absolute; 
+    top: 33%;
+    right: -100%; 
+    transition: right 0.3s;
+}
+
+.transaction-2:hover p:first-child {
+    padding-left: 20px;
+}
+
+.transaction-2:hover p {
+    padding-right: 106px;
+}
+
+.transaction-2:hover .delete-btn-2 {
+    right: 0;
+    padding-right: 10px;
+    border: 1px solid #d2373f;
+    color: #d2373f;
+    padding: 2px 5px;
+    margin-right: 10px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.transaction-2:hover .percentage-display-2 {
+    right: 0;
+    padding-right: 40px;
+    background-color: #d2373f;
+    color: white;
+    padding: 3px 5px;
+    margin-right: 35px;
+    font-size: 14px;
 }
