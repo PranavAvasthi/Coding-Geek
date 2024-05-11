@@ -8,6 +8,8 @@ const expenseDetails = document.getElementById("expense-details");
 const closeBtn = document.getElementById("close-btn");
 const incVal = document.getElementById("income-value");
 const expVal = document.getElementById("expenses-value");
+const graphBtn1 = document.getElementById("show-income-graph");
+const graphBtn2 = document.getElementById("show-expense-graph");
 
 // Update Border color
 function updateBorderColor(element, color) {
@@ -20,9 +22,13 @@ function updateIconColor() {
     if (selectedValue === "inc") {
         submit.style.border = "1px solid #5d945c";
         submit.style.color = "#5d945c";
+        graphBtn.style.color = "#5d945c";
+        graphBtn.style.border = "1px solid #5d945c";
     } else if (selectedValue === "exp") {
         submit.style.border = "1px solid #d2373f";
         submit.style.color = "#d2373f";
+        graphBtn.style.color = "#d2373f";
+        graphBtn.style.border = "1px solid #d2373f";
     }
 }
 
@@ -165,7 +171,6 @@ function handleClick() {
         updateExpensePercentageValue();
     }
 }
-
 
 function getPreviousStatements() {
     // console.log(JSON.parse(localStorage.getItem('statement')) || {})
@@ -442,7 +447,7 @@ function updateIncomePercentageValue() {
     const totalExpense = storedData.newExpense.reduce((acc, cur) => acc + cur.amount, 0);
     const totalAbsoluteValue = Math.abs(totalIncome + totalExpense);
 
-    let incomePercentage = (totalIncome / totalAbsoluteValue) * 100;
+    let incomePercentage = totalAbsoluteValue !== 0 ? (totalIncome / totalAbsoluteValue) * 100 : 0;
 
     const incBudget = document.querySelector(".budget-income");
     let existingPercentageDisplay = incBudget.querySelector(".income-percentage");
@@ -464,7 +469,7 @@ function updateExpensePercentageValue() {
     const totalExpense = storedData.newExpense.reduce((acc, cur) => acc + cur.amount, 0);
     const totalAbsoluteValue = Math.abs(totalIncome + totalExpense);
 
-    let expensePercentage = totalExpense / totalAbsoluteValue * 100;
+    let expensePercentage = totalAbsoluteValue !== 0 ? (totalExpense / totalAbsoluteValue) * 100 : 0;
 
     let existingPercentageDisplay = expVal.querySelector(".expenses-percentage");
     
@@ -477,6 +482,75 @@ function updateExpensePercentageValue() {
 
         const expBudget = document.querySelector(".budget-expenses");
         expBudget.appendChild(percentageDisplay);
+    }
+}
+
+function showIncomeLineGraph() {
+    const storedData = JSON.parse(localStorage.getItem('statement')) || { newIncome: [], newExpense: [] };
+    const incomeData = storedData.newIncome.map(item => ({ x: item.description, y: item.amount }));
+
+    if (incomeChart) {
+        incomeChart.data.labels = incomeData.map(item => item.x);
+        incomeChart.data.datasets[0].data = incomeData.map(item => item.y);
+        incomeChart.update();
+    } else {
+        const incomeCtx = document.getElementById('income-chart').getContext('2d');
+    
+        incomeChart = new Chart(incomeCtx, {
+            type: 'line',
+            data: {
+                labels: incomeData.map(item => item.x),
+                datasets: [{
+                    label: 'INCOME',
+                    data: incomeData.map(item => item.y),
+                    backgroundColor: '#5d945c',
+                    borderColor: '#5d945c',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+}
+
+// Function to show expense line graph
+function showExpenseLineGraph() {
+    const storedData = JSON.parse(localStorage.getItem('statement')) || { newIncome: [], newExpense: [] };
+    const expenseData = storedData.newExpense.map(item => ({ x: item.description, y: item.amount }));
+
+    if (expenseChart) {
+        expenseChart.data.labels = expenseData.map(item => item.x);
+        expenseChart.data.datasets[0].data = expenseData.map(item => item.y);
+        expenseChart.update();
+    } else {
+        const expenseCtx = document.getElementById('expenses-chart').getContext('2d');
+    
+        expenseChart = new Chart(expenseCtx, {
+            type: 'line',
+            data: {
+                labels: expenseData.map(item => item.x),
+                datasets: [{
+                    label: 'EXPENSE',
+                    data: expenseData.map(item => item.y),
+                    backgroundColor: '#d2373f',
+                    borderColor: '#d2373f',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
     }
 }
 
@@ -516,3 +590,39 @@ function updateLocalStorage(data, updateTotalValues) {
 }
 
 submit.addEventListener("click", handleClick);
+
+let incomeChart, expenseChart;
+let isIncomeGraphVisible = true;
+let isExpenseGraphVisible = true; 
+
+graphBtn1.addEventListener("click", function() {
+    incomeChartToggle();
+    graphBtn1.classList.toggle("slant-line-income");
+});
+
+graphBtn2.addEventListener("click", function() {
+    expenseChartToggle();
+    graphBtn2.classList.toggle("slant-line-expense");
+});
+
+// Toggle function for income chart
+function incomeChartToggle() {
+    if (incomeChart) {
+        incomeChart.canvas.style.display = isIncomeGraphVisible ? "none" : "block";
+        isIncomeGraphVisible = !isIncomeGraphVisible;
+    } else {
+        showIncomeLineGraph();
+        isIncomeGraphVisible = true;
+    }
+}
+
+// Toggle function for expense chart
+function expenseChartToggle() {
+    if (expenseChart) {
+        expenseChart.canvas.style.display = isExpenseGraphVisible ? "none" : "block";
+        isExpenseGraphVisible = !isExpenseGraphVisible;
+    } else {
+        showExpenseLineGraph();
+        isExpenseGraphVisible = true;
+    }
+}
