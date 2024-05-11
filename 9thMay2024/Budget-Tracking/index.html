@@ -31,6 +31,8 @@
             <input type="text" id="add-description" placeholder="description">
             <input type="number" id="add-amount" placeholder="amount">
             <div id="add-btn"> &#10003</i></div>
+            <button id="show-income-graph"><i class="fa-solid fa-chart-line"></i></button>
+            <button id="show-expense-graph"><i class="fa-solid fa-chart-line"></i></button>
         </div>
 
         <div id="error-msg"> 
@@ -50,8 +52,14 @@
             <div id="income-details"></div>
             <div id="expense-details"></div>
         </div>
+
+        <div class="graph">
+            <canvas id="income-chart"></canvas>
+            <canvas id="expenses-chart"></canvas>
+        </div>
     </main>
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://kit.fontawesome.com/faa4834db5.js" crossorigin="anonymous"></script>
     <script src="script.js"></script>
 </body>
