@@ -150,8 +150,8 @@ header p {
 }
 
 #add-type {
-    padding: 10px 0px;
-    width: 3%;
+    padding: 9px 6px;
+    /* width: 3vw; */
     border: 1px solid #5d945c;
     font-size: 1.1rem;
     border-radius: 50%;
@@ -235,11 +235,6 @@ header p {
     display: flex;
     justify-content: space-between;
 }
-
-/* #income-details {
-    display: flex;
-    flex-direction: column;
-} */
 
 .transaction-1 {
     display: flex;
@@ -405,4 +400,23 @@ header p {
 #expenses-chart {
     position: absolute;
     left: 720px;
+}
+
+@media screen and (min-width: 1100px) {
+    .close-btn {
+        color: red;
+        position: absolute;
+        top: 39%;
+        left: 82%;
+    }
+
+    #income-chart {
+        position: absolute;
+        left: 50px;
+    }
+    
+    #expenses-chart {
+        position: absolute;
+        left: 990px;
+    }
 }
