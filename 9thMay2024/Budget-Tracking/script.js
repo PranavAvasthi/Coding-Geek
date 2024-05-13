@@ -22,13 +22,9 @@ function updateIconColor() {
     if (selectedValue === "inc") {
         submit.style.border = "1px solid #5d945c";
         submit.style.color = "#5d945c";
-        graphBtn.style.color = "#5d945c";
-        graphBtn.style.border = "1px solid #5d945c";
     } else if (selectedValue === "exp") {
         submit.style.border = "1px solid #d2373f";
         submit.style.color = "#d2373f";
-        graphBtn.style.color = "#d2373f";
-        graphBtn.style.border = "1px solid #d2373f";
     }
 }
 
@@ -98,6 +94,7 @@ closeBtn.addEventListener("click", function () {
 });
 
 // handling click part
+// handling click part
 function handleClick() {
     const typeValue = select.value;
     const descValue = input1.value;
@@ -108,11 +105,15 @@ function handleClick() {
         return;
     }
 
+    const now = new Date();
+    const timestamp = now.toLocaleString();
+
     const statement = {
         type: typeValue,
         description: descValue,
         amount: amValue,
-        percentage: 0
+        percentage: 0,
+        timestamp: timestamp
     };
 
     let prevStatements = getPreviousStatements();
@@ -134,7 +135,7 @@ function handleClick() {
     }
 
     let obj = updateStatements(statement, prevStatements);
-    console.log(obj)
+    console.log(obj);
     updateLocalStorage(obj);
     updateTotalBudget();
     updateIncomePercentages();
@@ -160,6 +161,13 @@ function handleClick() {
         updateIncomePercentages();
         updateIncomePercentageValue();
     } else {
+        // Check if there's enough income to cover the expense
+        const totalIncome = prevStatements.newIncome.reduce((acc, cur) => acc + cur.amount, 0);
+        if (statement.amount > totalIncome) {
+            showError("Error : Add more Income to proceed!");
+            return;
+        }
+
         const statementEle = createExpenseStatement(statement);
         expenseDetails.appendChild(statementEle);
 
@@ -171,6 +179,7 @@ function handleClick() {
         updateExpensePercentageValue();
     }
 }
+
 
 function getPreviousStatements() {
     // console.log(JSON.parse(localStorage.getItem('statement')) || {})
@@ -186,7 +195,6 @@ function updateStatements(statement, prevStatements) {
 
     if (statement.type === 'exp') {
         if (statement.amount > total) {
-            showError("Error : Add more Income to proceed!");
             return prevStatements; 
         }
         expense.push(statement);
@@ -220,12 +228,10 @@ function createIncomeStatement(statement) {
     description.textContent = statement.description;
     transaction.appendChild(description);
 
-    const now = new Date();
-    const formattedDateTime = now.toLocaleString();  // Localized date and time
-
-    const dateTime = document.createElement("p");
-    dateTime.textContent = formattedDateTime;
-    transaction.appendChild(dateTime);
+    const timestamp = document.createElement("p");
+    timestamp.textContent = statement.timestamp; // stored timestamp
+    // console.log(statement.timestamp);
+    transaction.appendChild(timestamp);
 
     const amount = document.createElement("p");
     amount.textContent = `+ ${statement.amount}`;
@@ -238,12 +244,15 @@ function createIncomeStatement(statement) {
     deleteBtn.addEventListener("click", function () {
         deleteIncomeStatement(transaction, statement);
     });
-
     transaction.appendChild(deleteBtn);
 
     // Recalculate and update income percentages
     updateIncomePercentages();
     updateIncomePercentageValue();
+
+    if(incomeDetails.children.length > 1) {
+        showIncomeLineGraph();
+    }
 
     return transaction;
 }
@@ -257,16 +266,13 @@ function createExpenseStatement(statement) {
     description.textContent = statement.description;
     transaction.appendChild(description);
 
-    const now = new Date();
-    const formattedDateTime = now.toLocaleString();  
-
-    const dateTime = document.createElement("p");
-    dateTime.textContent = formattedDateTime;
-    transaction.appendChild(dateTime);
+    const timestamp = document.createElement("p");
+    timestamp.textContent = statement.timestamp; // stored timestamp
+    transaction.appendChild(timestamp);
 
     const amount = document.createElement("p");
     amount.textContent = `- ${statement.amount}`;
-    amount.style.color = "#d2373f"; 
+    amount.style.color = "#d2373f";
     transaction.appendChild(amount);
 
     const deleteBtn = document.createElement("p");
@@ -275,15 +281,19 @@ function createExpenseStatement(statement) {
     deleteBtn.addEventListener("click", function () {
         deleteExpenseStatement(transaction, statement);
     });
-
     transaction.appendChild(deleteBtn);
 
     // Recalculate and update expense percentages
     updateExpensePercentages();
     updateExpensePercentageValue();
 
+    if(expenseDetails.children.length > 1) {
+        showExpenseLineGraph();
+    }
+
     return transaction;
 }
+
 
 
 function updateTotal() {
@@ -322,7 +332,7 @@ function deleteIncomeStatement(transaction, statement) {
         
         if(total < 0) {
             showError("Error: Deleting this will make budget negative!");
-            errorOccurred = true; // Set flag to true if error occurs
+            errorOccurred = true;
         } else {
             prevStatements.newTotal = total;
 
@@ -345,10 +355,17 @@ function deleteIncomeStatement(transaction, statement) {
             updateTotal();
             updateIncomePercentages();
             updateIncomePercentageValue();
-            updateExpensePercentages(); // Add this line to update expense percentages
-            updateExpensePercentageValue(); // Add this line to update expense percentage value
-        }
+            updateExpensePercentages(); 
+            updateExpensePercentageValue();
+
+            if(incomeDetails.children.length === 0) {
+                document.getElementById('income-chart').style.display = "none";
+                graphBtn1.classList.remove('slant-line-income');
+            } else {
+                showIncomeLineGraph();
+            }
     }
+}
 }
 
 function updateIncomePercentages() {
@@ -411,8 +428,15 @@ function deleteExpenseStatement(transaction, statement) {
         updateTotal();
         updateExpensePercentages();
         updateExpensePercentageValue();
-        updateIncomePercentages(); // Add this line to update income percentages
-        updateIncomePercentageValue(); // Add this line to update income percentage value
+        updateIncomePercentages(); 
+        updateIncomePercentageValue(); 
+
+        if(expenseDetails.children.length === 0) {
+            document.getElementById('expenses-chart').style.display = "none";
+            graphBtn2.classList.remove('slant-line-expense');
+        } else {
+            showExpenseLineGraph();
+        }
     }
 }
 
@@ -471,8 +495,9 @@ function updateExpensePercentageValue() {
 
     let expensePercentage = totalAbsoluteValue !== 0 ? (totalExpense / totalAbsoluteValue) * 100 : 0;
 
-    let existingPercentageDisplay = expVal.querySelector(".expenses-percentage");
-    
+    const expBudget = document.querySelector(".budget-expenses");
+    let existingPercentageDisplay = expBudget.querySelector(".expenses-percentage");
+
     if (existingPercentageDisplay) {
         existingPercentageDisplay.textContent = `${expensePercentage.toFixed(2)}%`;
     } else {
@@ -480,7 +505,6 @@ function updateExpensePercentageValue() {
         percentageDisplay.classList.add("expenses-percentage");
         percentageDisplay.textContent = `${expensePercentage.toFixed(2)}%`;
 
-        const expBudget = document.querySelector(".budget-expenses");
         expBudget.appendChild(percentageDisplay);
     }
 }
@@ -579,11 +603,13 @@ window.onload = ()=> {
     updateExpensePercentages();
     updateIncomePercentageValue();
     updateExpensePercentageValue();
+    // graphBtn1.classList.add("slant-line-income");
+    // graphBtn2.classList.add("slant-line-expense");
 };
 
 function updateLocalStorage(data, updateTotalValues) {
     localStorage.setItem('statement', JSON.stringify(data));
-    if (updateTotalValues) { 
+    if (updateTotalValues) {
         updateTotal();
         updateTotalBudget();
     }
@@ -605,7 +631,7 @@ graphBtn2.addEventListener("click", function() {
     graphBtn2.classList.toggle("slant-line-expense");
 });
 
-// Toggle function for income chart
+// Function to toggle visibility of income chart
 function incomeChartToggle() {
     if (incomeChart) {
         incomeChart.canvas.style.display = isIncomeGraphVisible ? "none" : "block";
@@ -616,7 +642,7 @@ function incomeChartToggle() {
     }
 }
 
-// Toggle function for expense chart
+// Function to toggle visibility of expense chart
 function expenseChartToggle() {
     if (expenseChart) {
         expenseChart.canvas.style.display = isExpenseGraphVisible ? "none" : "block";
@@ -626,3 +652,10 @@ function expenseChartToggle() {
         isExpenseGraphVisible = true;
     }
 }
+
+let now = new Date();
+const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+const month = now.getMonth();
+const year = now.getFullYear();
+
+document.getElementById("head").textContent = `Net Available Budget in month ${months[month]} ${year}:`;
